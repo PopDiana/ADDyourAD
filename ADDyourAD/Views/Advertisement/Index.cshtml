@@ -1,0 +1,123 @@
+﻿@model IEnumerable<ADDyourAD.Models.Advertisement>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<p>
+    @if (Authentication.Instance.isLoggedIn())
+    {     
+       <form style="margin-top:30px">
+           <input asp-action="Create" type="submit" value="Add an advertisement" class="btn btn-default" style="margin-top:14px; color:darkslateblue;  background-color: #F5F5F5; border-color:blueviolet; font-size:large "/>
+        </form>
+    }
+    else
+    {
+        <h4 style="margin-top:30px" >Please login to add an advertisement.</h4>
+
+    }
+</p>
+
+
+@using (Html.BeginForm("Index", "Advertisement"))
+{
+
+<fieldset style="margin-top:45px">
+    <h3 style="color:darkslateblue">Filters : </h3>
+    <label style="margin-right:60px"><input id="includeExpired" name="includeExpired" type="radio" value="true" /> Include Expired </label>
+
+    <label style="margin-right:6px">By category :</label>
+    <select id="byCategory" name="byCategory" style="padding:4px">
+        @foreach (Category item in ViewBag.Categories)
+        {
+            <option style="color:darkslateblue">@item.CategoryName</option>
+
+        }
+    </select>
+
+    <button type="submit" style="padding:3px; margin-top:8px; margin-right:34px; width:40px">
+        <span class="glyphicon glyphicon-filter"></span>
+    </button>
+</fieldset>
+ 
+}
+
+
+<table class="table" style="margin-top:60px">
+    
+    <thead>
+        <tr>
+            <th >
+                <div style="margin-left:10px">@Html.ActionLink("Title", "Index", new { sortOrder = ViewBag.TitleSortParm }) <span class="glyphicon glyphicon-sort-by-attributes" style="color:steelblue"></span></div>
+
+            </th>
+
+            <th>
+                @Html.ActionLink("Date", "Index", new { sortOrder = ViewBag.DateSortParm }) <span class="glyphicon glyphicon-sort-by-attributes"style="color:steelblue" ></span>
+            </th>
+
+            <th>
+                @Html.ActionLink("Category", "Index", new { sortOrder = ViewBag.CategorySortParm }) <span class="glyphicon glyphicon-sort-by-attributes" style="color:steelblue" ></span>
+            </th>
+            <th>
+                @Html.ActionLink("User", "Index", new { sortOrder = ViewBag.UserSortParm }) <span class="glyphicon glyphicon-sort-by-attributes" style="color:steelblue"></span>
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody style="background-color: #F5F5F5; color:darkslateblue">
+        @foreach (var item in Model)
+        {
+
+            <tr>
+                <td>
+                    <h4 style="margin-left:14px">  <a asp-action="Details" asp-route-id="@item.IdAdvertisement"> @Html.DisplayFor(modelItem => item.Title) </a></h4>
+                </td>
+
+                <td>
+                    <i class="glyphicon glyphicon-calendar" style="margin-top:10px"></i>  @Html.DisplayFor(modelItem => item.AddDate)
+                </td>
+
+                <td>
+                    <i class="glyphicon glyphicon-th-list" style="margin-top:10px" ></i> @Html.DisplayFor(modelItem => item.IdCategoryNavigation.CategoryName)
+                </td>
+                <td>
+                    <i class="glyphicon glyphicon-user" style="margin-top:10px"></i>  @Html.DisplayFor(modelItem => item.IdUserNavigation.Username)
+                </td>
+                <td>
+
+                   
+
+                    @{ if (Authentication.Instance.isLoggedIn())
+                        {
+                            User currentUser = Authentication.Instance.getCurrentUser();
+                            if (Authentication.Instance.isAdmin())
+                            {
+
+                                <form style="margin-top:5px">
+                                    <input asp-action="Edit" asp-route-id="@item.IdAdvertisement" type="submit" value="Edit" class="btn btn-default" style="color:darkslateblue;  background-color: #d9cbf9" />
+                                    <input asp-action="Delete" asp-route-id="@item.IdAdvertisement" type="submit" value="Delete" class="btn btn-default" style="color:darkslateblue;  background-color: #d9cbf9" />
+                                </form>
+                                
+
+                            }
+                            else if (currentUser.IdUser == item.IdUser)
+                            {
+                                <form style="margin-top:5px">
+                                    <input asp-action="Edit" asp-route-id="@item.IdAdvertisement" type="submit" value="Edit" class="btn btn-default" style="color:darkslateblue;  background-color: #d9cbf9" />
+                                    <input asp-action="Delete" asp-route-id="@item.IdAdvertisement" type="submit" value="Delete" class="btn btn-default" style="color:darkslateblue;  background-color: #d9cbf9" />
+                                </form>
+                               
+
+                            }
+                        }
+                    }
+                </td>
+            </tr>
+
+
+        }
+    </tbody>
+</table>
+

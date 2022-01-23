@@ -1,0 +1,101 @@
+﻿@model ADDyourAD.Models.Advertisement
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div>
+    <h4 style="margin-top:30px"><a asp-action="Index"><span class="glyphicon glyphicon-arrow-left"></span> Back to list  </a></h4>
+</div>
+
+<div style="border: 5px solid #d9cbf9 ; background-color: #F5F5F5;
+     margin-top:30px; margin-right:500px; color:darkslateblue">
+    <label style="margin-top:14px; margin-left:30px">
+        <h2>@Html.DisplayFor(model => model.Title)</h2>
+            
+                @{ if (Authentication.Instance.isLoggedIn())
+                    {
+                        User currentUser = Authentication.Instance.getCurrentUser();
+                        if (Authentication.Instance.isAdmin())
+                        {
+                            <form style="margin-top:14px">
+                                <input asp-action="Edit" asp-route-id="@Model.IdAdvertisement" type="submit" value="Edit" class="btn btn-default" style="color:darkslateblue;  background-color: #d9cbf9" />
+                                <input asp-action="Delete" asp-route-id="@Model.IdAdvertisement" type="submit" value="Delete" class="btn btn-default" style="color:darkslateblue;  background-color: #d9cbf9" />
+                            </form>
+                        }
+                        else if (currentUser.IdUser == @Model.IdUser)
+                        {
+                            <form style="margin-top:14px">
+                                <input asp-action="Edit" asp-route-id="@Model.IdAdvertisement" type="submit" value="Edit" class="btn btn-default" style="color:darkslateblue;  background-color: #d9cbf9 " />
+                                <input asp-action="Delete" asp-route-id="@Model.IdAdvertisement" type="submit" value="Delete" class="btn btn-default" style="color:darkslateblue;  background-color: #d9cbf9" />
+                            </form>
+
+                        }
+                    }
+                }
+
+             
+        
+        
+        
+    </label>
+    <br />
+    <br />
+    <h4 style="margin-left:30px; margin-top:14px; color:darkslateblue; margin-right:30px">@Html.DisplayFor(model => model.Details)</h4>
+    <br />
+    <br />
+    <label style="margin-top:20px; margin-left:20px">
+        <i class="glyphicon glyphicon-calendar"></i>  @Html.DisplayFor(model => model.AddDate)  -
+        @Html.DisplayFor(model => model.ExpirationDate)
+
+        <i class="glyphicon glyphicon-th-list" style="margin-left:14px"></i>  @Html.DisplayFor(model => model.IdCategoryNavigation.CategoryName)
+
+    </label>
+    <br />
+    <label style="margin-left:20px; margin-bottom:20px">
+        Contact : <i class="glyphicon glyphicon-envelope" style="margin-left:6px"></i>  @Html.DisplayFor(model => model.IdUserNavigation.Email)
+        <i class="glyphicon glyphicon-user" style="margin-top:14px; margin-left:14px"></i>  @Html.DisplayFor(model => model.IdUserNavigation.Username)
+    </label>
+</div>
+
+
+
+
+<h3 style="margin-top:80px; color:steelblue">Comments : </h3>
+
+@{ if (Authentication.Instance.isLoggedIn() && !Authentication.Instance.isAdmin())
+    {
+
+
+        @using (Html.BeginForm("PostComment", "Advertisement", FormMethod.Post))
+        {
+
+            <input type="text" name="comment" id="comment" style="margin-top:30px; padding-bottom:60px; width:300px; margin-bottom:60px" />
+
+            <input type="submit" value="Post Comment" style="margin-top:20px; margin-bottom:14px" />
+
+        }
+    }
+}
+
+            <hr style="margin-top:5px">
+@foreach (Comment item in ViewBag.comments)
+{
+    <div style="border: 1px solid steelblue; border-radius:5px;
+     margin-top:30px; margin-right:700px; color:darkslateblue">
+        <label style="margin-top:14px; margin-left:14px">
+            <i class="glyphicon glyphicon-user"></i>  @item.IdUserNavigation.Username
+        </label>
+        <br />
+        <br />
+        <div style="margin-left:20px; margin-top:8px; color:black">@item.Text</div>
+        <br />
+        <br />
+        <label>
+            <i class="glyphicon glyphicon-calendar" style="margin-bottom:14px; margin-left:250px"></i>  @item.Date
+        </label>
+    </div>
+
+}
+
+

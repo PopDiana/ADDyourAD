@@ -1,0 +1,17 @@
+﻿@model ADDyourAD.Models.Advertisement
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<div class="col-md-4"></div>
+<div class="col-md-4">
+<h4 style="margin-top:100px">Are you sure you want to delete your ad?</h4>
+
+<form asp-action="Delete" style="margin-top:30px">
+    <input type="hidden" asp-for="IdAdvertisement" />
+    <input type="submit" value="Yes" class="btn btn-primary btn-sm"  />
+    <input asp-action="Index" type="submit" value="Back" class="btn btn-primary btn-sm"/>
+</form>
+
+</div>
